@@ -1,0 +1,14 @@
+#!/bin/bash
+#/usr/local/bin/ebs-nvme-mapping
+
+#delete any invalid symlink
+for f in `find -L /dev -maxdepth 1 -type l`; do unlink $f; done
+for blkdev in $(sudo nvme list | awk '/^\/dev/ { print $1 }' ) ; do
+  mapping=`sudo nvme id-ctrl --raw-binary "${blkdev}"  | cut -c3073-3104 | tr -s ' ' | sed 's/ $//g'`
+ if [[ "${mapping}" == /dev/* ]]; then
+    ( test -b "${blkdev}" && test -L "${mapping}" ) || ln -s "${blkdev}" "${mapping}"
+    else
+        vol="/dev/$mapping"
+        ( test -b "${blkdev}" && test -L "${vol}" ) || ln -s "${blkdev}" "${vol}"
+  fi
+done

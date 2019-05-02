@@ -1,0 +1,2 @@
+ACTION=="add|change", SUBSYSTEM=="block", KERNEL=="nvme[0-26]n[1-2]", ATTRS{model}=="Amazon Elastic Block Store              ", RUN+="/usr/local/bin/ebs-nvme-mapping"
+ACTION=="remove", SUBSYSTEM=="block", KERNEL=="nvme[0-26]n[1-2]", ATTRS{model}=="Amazon Elastic Block Store              ", RUN+="/usr/local/bin/ebs-nvme-unlink"
